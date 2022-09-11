@@ -1,0 +1,88 @@
+
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div id="page-wrapper">
+    <div id="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="page-head-line">Lista Producto</h1>
+                <h1 class="page-subhead-line">This is dummy text , you can replace it with your original text. </h1>
+  
+            </div>
+        </div>
+        <div class='container '>
+            
+            <div class='container'>
+
+                <table class="table table-striped table-dark">
+                    
+                  </table> <table class="table table-striped table-dark">
+                    <h4>Factura Nro: {{factura.codigo}}</h4>
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Codigo</th>
+                        <th scope="col">Fecha Compra</th>
+                        <th scope="col">Rut Proveedor</th>
+                        <th scope="col">Nombre Proveedor</th>
+            
+                        <th scope="col">Direccion Proveedor</th>
+                        <th scope="col">Cuidad Proveedor</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">{{factura.id}}</th>
+                            <td>{{factura.codigo}}</td>
+                            <td>{{factura.fecha_compra}}</td>        
+                            <td>{{factura.proveedor.rut_p}}</td> 
+                            <td>{{factura.proveedor.nombre_p}}</td> 
+                            <td>{{factura.proveedor.direccion}}</td> 
+                            <td>{{factura.proveedor.cuidad}}</td> 
+              
+            
+            
+                        </tr>
+                    </tbody>
+                  </table>
+            
+                  <div class='container'>
+                    <table class="table table-striped table-dark">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Codigo</th>
+                          <th scope="col">Nombre</th>
+                          <th scope="col">Precio</th>
+                          <th scope="col">Estado</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          {% for p in factura.related_productos.all %}
+                          <tr>
+                              <th scope="row">{{p.id}}</th>
+                              <td>{{p.codigo}}</td>
+                              <td>{{p.nombre}}</td>
+                              <td>${{p.precio}}</td>
+                              <td>
+                              {% if p.estado == False %}
+                              <p class="card-text">Producto Dado de Baja</p>
+                              {% else %}
+                              <p class="card-text">Producto Activo!</p>      
+                              {% endif %}
+                              </td>
+                              <td><a  class='btn btn-success' href="{% url 'detalleproducto' p.codigo %}">Ver</a></td>
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+            </div>
+            
+        </div>
+       
+    </div>               
+</div>
+{% endblock content %}

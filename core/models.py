@@ -3,8 +3,6 @@ from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
 
-#se crean clases para cada entidad de la base de datos, declarando atributos y tipo de datos
-#tambien se definen funciones para cada modelo. __str__ es funcion para darle nombre (como un string)
 
 class Categoria(models.Model):
     nombre = models.CharField(max_length=150, default='Generico')
@@ -70,13 +68,13 @@ class Factura(models.Model):
         return str(self.id)
 
 
-class ProductoFactura(models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    factura = models.ForeignKey(Factura, on_delete=models.CASCADE)
+# class ProductoFactura(models.Model):
+#     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+#     factura = models.ForeignKey(Factura, on_delete=models.CASCADE)
 
-    class Meta:
-        unique_together = [['producto','factura']]
+#     class Meta:
+#         unique_together = [['producto','factura']]
 
-    def __str__(self):
-        return f'{self.producto} en {self.factura}'
+#     def __str__(self):
+#         return f'{self.producto} en {self.factura}'
     

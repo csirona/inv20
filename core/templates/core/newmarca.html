@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div id="page-wrapper">
+    <div id="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="page-head-line">Nueva Marca</h1>
+                <h1 class="page-subhead-line">This is dummy text , you can replace it with your original text. </h1>
+  
+            </div>
+        </div>
+        <div class='container '>
+            
+            
+            <div class="container p-5 d-flex justify-content-center">
+                
+                <form method="POST" enctype="multipart/form-data">
+             
+                    <!-- Security token -->
+                    {% csrf_token %}
+                 
+                    <!-- Using the formset -->
+                    {{ form.as_p }}
+                    <div class='container d-flex justify-content-center'>
+                        <input type="submit" value="Crear" class='btn btn-primary  mt-3'>
+                    </div>
+            </div>
+        </div>
+        <!-- /. ROW  -->
+        
+        <!-- /. ROW  -->
+  
+    </div>               
+</div>
+
+{% endblock content %}

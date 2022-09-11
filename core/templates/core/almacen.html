@@ -1,0 +1,82 @@
+
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div id="page-wrapper">
+    <div id="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="page-head-line">Lista Producto</h1>
+                <h1 class="page-subhead-line">This is dummy text , you can replace it with your original text. </h1>
+  
+            </div>
+        </div>
+        <div class='container '>
+            
+            <div class='container'>
+                {% for message in messages %}
+                      <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert">
+                          <a type="button" class="close" data-bs-dismiss="alert" data-dismiss="alert" aria-label="Close" >
+                              <span aria-hidden="true">&times;</span>
+                          </a>
+                          {{ message | safe }}
+                      </div>
+                  {% endfor %}
+                <div class="row">
+                  <div class="col-md-12 search pb-4">
+                      <form method="get">
+                          <div id="custom-search-input">
+                              <div class="input-group col-md-12">
+                                  <input type="text" class="form-control" placeholder="Buscar..." name="buscar" value="{{ request.GET.buscar }}">
+                                  <span class="input-group-list">
+                                      <i class="icon icon-search"></i>
+                                      <button type="submit" class="btn btn-success">Buscar</button>
+                                  </span>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              
+                  <table class="table table-striped table-dark">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Nombre</th>
+                          <th scope="col">Almacen</th>
+                          <th scope="col">Estado</th>
+                          <th scope="col">Accion</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          {% for p in product %}
+                          <tr>
+                              <th scope="row">{{p.codigo}}</th>
+                              <td>{{p.nombre}}</td>
+                              {% if p.almacen %}
+                              <td>{{p.almacen}}</td>
+                              {% else %}
+                              <td>No registrado</td>
+                              {% endif %}
+                              
+                              <td>{{p.precio}}</td>
+                              <td>{% if p.estado %}
+                                
+                                  Activo
+                                  {% else %}
+                                  Inactivo
+                                  {% endif %}
+                                </td>
+                                <td><a  class='btn btn-success' href="{% url 'setalmacen' p.codigo %}">Registrar</a></td>
+                                  
+                                </tr>
+                          {% endfor %}
+                      </tbody>
+                    </table>
+              </div>
+            
+        </div>
+       
+    </div>               
+</div>
+{% endblock content %}

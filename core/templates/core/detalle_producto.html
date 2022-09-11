@@ -1,0 +1,46 @@
+
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div id="page-wrapper">
+    <div id="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="page-head-line">Lista Producto</h1>
+                <h1 class="page-subhead-line">This is dummy text , you can replace it with your original text. </h1>
+  
+            </div>
+        </div>
+        <div class='container '>
+            
+            <div class='container d-flex justify-content-center flex-column'>
+                <h3> Detalle de Producto</h3>
+                <div class="card" style="width: 18rem;">
+                  {% if producto.imagen %}
+                    <img class="card-img-top" src="{{producto.imagen.url}}" alt="Card image cap">
+                  {% else %}
+                    <img class="card-img-top" src="/media/core/images/dflt.jpg" alt="Card image cap">
+                  {% endif %}
+                  
+                  <div class="card-body">
+                    <h3 class="card-title">{{producto.nombre}}</h3>
+                    <h5 class="card-title">Codigo: {{producto.codigo}}</h5>
+                    <p class="card-text">Precio: ${{producto.precio}}</p>
+                    {% if producto.estado == False %}
+                    <p class="card-text">Producto dado de baja el {{producto.fecha_baja}}</p>
+                    {% else %}
+                    <p class="card-text">Producto Activo!</p>      
+                    {% endif %}
+                    <a href="{% url 'qrcode' producto.codigo %}" class="btn btn-primary">Ver Qr</a>
+                  </div>
+                </div>
+              
+                  
+                   
+              </div>
+            
+        </div>
+       
+    </div>               
+</div>
+{% endblock content %}

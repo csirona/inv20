@@ -27,15 +27,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">InvWeb</a>
+                <a class="navbar-brand" href="{% url 'index' %}">InvWeb</a>
             </div>
 
             <div class="header-right">
-
-                <a href="message-task.html" class="btn btn-info" title="New Message"><b>Inicio Sesion </b><i></i></a>
-                <a href="message-task.html"class="badge badge-secondary" ><b> Bienvenido user!</b><i ></i></a>
-                <a href="login.html" class="btn btn-danger" title="Logout">Cerrar Sesion<i class="fa fa-exclamation-circle fa-2x"></i></a>
-
+                {% if user.is_authenticated %}
+                <a class="badge badge-secondary" ><b> Bienvenido {{ user.username }} !</b><i ></i></a>
+                <a href="{% url 'logout' %}" class="btn btn-danger" title="Logout">Cerrar Sesion<i class="fa fa-exclamation-circle fa-2x"></i></a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-info" title="New Message"><b>Inicio Sesion </b><i></i></a>
+                {% endif %}
             </div>
         </nav>
         <!-- /. NAV TOP  -->
@@ -46,19 +47,19 @@
 
 
                     <li>
-                        <a class="active-menu" href="index.html"><i class="fa fa-dashboard "></i>Inicio</a>
+                        <a class="active-menu" href="{% url 'index' %}"><i class="fa fa-dashboard "></i>Inicio</a>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-desktop "></i>Facturas<span class="fa arrow"></span></a>
                          <ul class="nav nav-second-level">
                             <li>
-                                <a href="panel-tabs.html"><i class="fa fa-toggle-on"></i>Nueva Factura</a>
+                                <a href="{% url 'newfactura' %}"><i class="fa fa-toggle-on"></i>Nueva Factura</a>
                             </li>
                             <li>
-                                <a href="notification.html"><i class="fa fa-bell "></i>Lista Factura</a>
+                                <a href="{% url 'listfactura' %}"><i class="fa fa-bell"></i>Lista Factura</a>
                             </li>
                              <li>
-                                <a href="progress.html"><i class="fa fa-circle-o "></i>Factura Activa</a>
+                                <a href="{% url 'kitchen' %}"><i class="fa fa-circle-o "></i>Factura Activa</a>
                             </li>
                               
                            
@@ -68,13 +69,13 @@
                         <a href="#"><i class="fa fa-yelp "></i>Productos <span class="fa arrow"></span></a>
                          <ul class="nav nav-second-level">
                             <li>
-                                <a href="invoice.html"><i class="fa fa-coffee"></i>Lista Productos</a>
+                                <a href="{% url 'listproduct' %}"><i class="fa fa-coffee"></i>Lista Productos</a>
                             </li>
                             <li>
-                                <a href="pricing.html"><i class="fa fa-flash "></i>Almacen</a>
+                                <a href="{% url 'almacen' %}"><i class="fa fa-flash "></i>Almacen</a>
                             </li>
                              <li>
-                                <a href="component.html"><i class="fa fa-key "></i>Stock</a>
+                                <a href="{% url 'buscarstock' %}"><i class="fa fa-key "></i>Stock</a>
                             </li>
                                                         
                            
@@ -86,10 +87,10 @@
                          <ul class="nav nav-second-level">
                            
                              <li>
-                                <a href="form.html"><i class="fa fa-desktop "></i>Nuevo Proveedor </a>
+                                <a href="{% url 'newproveedor' %}"><i class="fa fa-desktop "></i>Nuevo Proveedor </a>
                             </li>
                              <li>
-                                <a href="form-advance.html"><i class="fa fa-code "></i>Lista Proveedores</a>
+                                <a href="{% url 'listproveedor' %}"><i class="fa fa-code "></i>Lista Proveedores</a>
                             </li>
                              
                            
@@ -100,10 +101,10 @@
                         <a href="#"><i class="fa fa-sitemap "></i>Categorias <span class="fa arrow"></span></a>
                          <ul class="nav nav-second-level">
                             <li>
-                                <a href="#"><i class="fa fa-bicycle "></i>Nueva Categoria</a>
+                                <a href="{% url 'newcategoria' %}"><i class="fa fa-bicycle "></i>Nueva Categoria</a>
                             </li>
                              <li>
-                                <a href="#"><i class="fa fa-flask "></i>Lista Categorias</a>
+                                <a href="{% url 'listcategoria' %}"><i class="fa fa-flask "></i>Lista Categorias</a>
                             </li>
                             
                         </ul>
@@ -112,10 +113,10 @@
                         <a href="#"><i class="fa fa-sitemap "></i>Marcas <span class="fa arrow"></span></a>
                          <ul class="nav nav-second-level">
                             <li>
-                                <a href="#"><i class="fa fa-bicycle "></i>Nueva Marca</a>
+                                <a href="{% url 'newmarca' %}"><i class="fa fa-bicycle "></i>Nueva Marca</a>
                             </li>
                              <li>
-                                <a href="#"><i class="fa fa-flask "></i>Lista Marcas</a>
+                                <a href="{% url 'listmarca' %}"><i class="fa fa-flask "></i>Lista Marcas</a>
                             </li>
                             
                         </ul>
@@ -129,23 +130,11 @@
         </nav>
         <!-- /. NAV SIDE  -->
         
-<div id="page-wrapper">
-    <div id="page-inner">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="page-head-line">Inicio</h1>
-                <h1 class="page-subhead-line">This is dummy text , you can replace it with your original text. </h1>
-  
-            </div>
-        </div>
-        <!-- /. ROW  -->
-        {% block content %}
-  
-        {% endblock content %}
-        <!-- /. ROW  -->
-  
-    </div>               
-</div><!--/.ROW-->
+<!--/.ROW-->
+{% block content %}
+
+{% endblock content %}
+
 
 
 
