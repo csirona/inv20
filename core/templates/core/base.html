@@ -43,12 +43,13 @@
         <nav class="navbar-default navbar-side" role="navigation">
             <div class="sidebar-collapse">
                 <ul class="nav" id="main-menu">
-                    
+
 
 
                     <li>
                         <a class="active-menu" href="{% url 'index' %}"><i class="fa fa-dashboard "></i>Inicio</a>
                     </li>
+                    {% if user.is_authenticated %}
                     <li>
                         <a href="#"><i class="fa fa-desktop "></i>Facturas<span class="fa arrow"></span></a>
                          <ul class="nav nav-second-level">
@@ -61,8 +62,8 @@
                              <li>
                                 <a href="{% url 'kitchen' %}"><i class="fa fa-circle-o "></i>Factura Activa</a>
                             </li>
-                              
-                           
+
+
                         </ul>
                     </li>
                      <li>
@@ -77,26 +78,26 @@
                              <li>
                                 <a href="{% url 'buscarstock' %}"><i class="fa fa-key "></i>Stock</a>
                             </li>
-                                                        
-                           
+
+
                         </ul>
                     </li>
-                    
+
                      <li>
                         <a href="#"><i class="fa fa-bicycle "></i>Proveedores <span class="fa arrow"></span></a>
                          <ul class="nav nav-second-level">
-                           
+
                              <li>
                                 <a href="{% url 'newproveedor' %}"><i class="fa fa-desktop "></i>Nuevo Proveedor </a>
                             </li>
                              <li>
                                 <a href="{% url 'listproveedor' %}"><i class="fa fa-code "></i>Lista Proveedores</a>
                             </li>
-                             
-                           
+
+
                         </ul>
                     </li>
-                     
+
                    <li>
                         <a href="#"><i class="fa fa-sitemap "></i>Categorias <span class="fa arrow"></span></a>
                          <ul class="nav nav-second-level">
@@ -106,7 +107,7 @@
                              <li>
                                 <a href="{% url 'listcategoria' %}"><i class="fa fa-flask "></i>Lista Categorias</a>
                             </li>
-                            
+
                         </ul>
                     </li>
                     <li>
@@ -118,18 +119,18 @@
                              <li>
                                 <a href="{% url 'listmarca' %}"><i class="fa fa-flask "></i>Lista Marcas</a>
                             </li>
-                            
+
                         </ul>
                     </li>
-                   
-                   
+                   {% endif %}
+
                 </ul>
 
             </div>
 
         </nav>
         <!-- /. NAV SIDE  -->
-        
+
 <!--/.ROW-->
 {% block content %}
 
@@ -138,7 +139,7 @@
 
 
 
-  
+
 
     <!-- /. FOOTER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
@@ -150,7 +151,7 @@
     <script src="{% static 'core/js/jquery.metisMenu.js' %}"></script>
        <!-- CUSTOM SCRIPTS -->
     <script src="{% static 'core/js/custom.js' %}"></script>
-    
+
 
 
 </body>

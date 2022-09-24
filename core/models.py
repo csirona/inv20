@@ -27,17 +27,27 @@ class Producto(models.Model):
     estado = models.BooleanField(default=False)
     fecha_baja = models.DateTimeField(null=True, blank=True)
     almacen = models.CharField(max_length=150,null=True,blank=True)
+    serie = models.CharField(max_length=20,null=True,blank=True)
     #qr
-    
+
     cantidad = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return f'{self.nombre} -> {self.precio}'
 
+    def formatNumber(self):
+        espanol=True
+        if type(self.precio) != int and type(self.precio) != float:
+            return self.precio
+        d={'.':',', ',':'.'}
+        return ''.join(d.get(s, s) for s in f"{self.precio:,.{0}f}") \
+            if espanol \
+            else f"{self.precio:,.{0}f}"
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50,null=True)
-    
+
     def __str__(self):
         return self.name
 
@@ -49,7 +59,7 @@ class Proveedor(models.Model):
     nombre_p = models.CharField(max_length=50)
     direccion= models.CharField(max_length=50)
     cuidad = models.CharField(max_length=50)
-    
+
     def __str__(self):
         return self.nombre_p
 
@@ -63,7 +73,7 @@ class Factura(models.Model):
     estado = models.BooleanField(default=True)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     autor = models.CharField(max_length=50,null=True,blank=True)
-    
+
     def __str__(self):
         return str(self.id)
 
@@ -77,4 +87,3 @@ class Factura(models.Model):
 
 #     def __str__(self):
 #         return f'{self.producto} en {self.factura}'
-    

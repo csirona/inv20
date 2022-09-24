@@ -14,30 +14,44 @@ class DateInput(forms.DateInput):
 
 
 class ProductoForm(forms.ModelForm):
-    
+
     class Meta:
         model = Producto
-        fields = ['nombre','categoria','marca','precio','imagen','cantidad']
+        fields = ['nombre','serie','categoria','marca','precio','imagen','cantidad']
         widgets = {
             'nombre': forms.TextInput(attrs={'class':'form-control'}),
+            'serie': forms.TextInput(attrs={'class':'form-control'}),
+            'categoria': forms.Select(attrs={'class':'form-select'}),
+            'marca': forms.Select(attrs={'class':'form-select'}),
+            'precio': forms.NumberInput(attrs={'class':'form-control'}),
+        }
+
+class ProductoFormUpdate(forms.ModelForm):
+
+    class Meta:
+        model = Producto
+        fields = ['nombre','serie','categoria','marca','precio','imagen']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class':'form-control'}),
+            'serie': forms.TextInput(attrs={'class':'form-control'}),
             'categoria': forms.Select(attrs={'class':'form-select'}),
             'marca': forms.Select(attrs={'class':'form-select'}),
             'precio': forms.NumberInput(attrs={'class':'form-control'}),
         }
 
 class AlmacenForm(forms.ModelForm):
-    
+
     class Meta:
         model = Producto
         fields = ['almacen']
         widgets = {
             'almacen': forms.TextInput(attrs={'class':'form-control'}),
-            
+
         }
 
 
 class CategoriaForm(forms.ModelForm):
-    
+
     class Meta:
         model = Categoria
         fields = ['nombre']
@@ -46,7 +60,7 @@ class CategoriaForm(forms.ModelForm):
         }
 
 class MarcaForm(forms.ModelForm):
-    
+
     class Meta:
         model = Marca
         fields = ['nombre']
@@ -61,13 +75,25 @@ class FacturaForm(forms.ModelForm):
         fields = ['codigo','descripcion','fecha_compra','proveedor']
         widgets = {
                     'fecha_compra': DateInput(),
+                    'descripcion': forms.TextInput(attrs={'class':'form-control'}),
                 }
+        labels = {
+            'codigo': 'Nº Factura',
+        }
 
 class ProveedorForm(forms.ModelForm):
     class Meta:
         model = Proveedor
         fields = ['rut_p','nombre_p','direccion','cuidad']
-      
+        labels = {
+            'rut_p': 'Rut.',
+            'nombre_p': 'Nombre.',
+            'direccion': 'Direccion',
+            'cuidad': 'Cuidad',
+
+
+        }
+
 
 class NewUserForm(UserCreationForm):
 	email = forms.EmailField(required=True)

@@ -47,11 +47,11 @@ def Tienda(request):
 
     if request.method == 'POST':
         form = FacturaForm(request.POST)
-        
+
         if form.is_valid() :
             f=form.save(commit=False)
             f.save()
-            
+
         return redirect('confirm')
     else:
         form = FacturaForm()
@@ -62,13 +62,13 @@ def Tienda(request):
         productos = Product.objects.filter(
             Q(id__icontains = queryset)
         ).distinct()
-        
+
 
     #Contezto de datos
     context={
         'productos':productos,
         'form':form,
-   
+
     }
     #Se retorna un render del template correspondiente a la ruta y le pasa el contexto
     return render(request, "core/tienda.html",context)
@@ -77,11 +77,11 @@ def Tienda(request):
 def NuevaMarca(request):
     if request.method == 'POST':
         form = MarcaForm(request.POST)
-     
+
         if form.is_valid() :
             f=form.save(commit=False)
             f.save()
-         
+
         return redirect('Tienda')
     else:
         form = MarcaForm()
@@ -94,12 +94,12 @@ def NuevaMarca(request):
 def NuevaCategoria(request):
     if request.method == 'POST':
         form = CategoriaForm(request.POST)
-     
+
         if form.is_valid() :
             f=form.save(commit=False)
             f.save()
-         
-        return redirect('Tienda')
+
+        return redirect('/')
     else:
         form = CategoriaForm()
     #Contezto de datos
@@ -111,12 +111,12 @@ def NuevaCategoria(request):
 def NuevoProveedor(request):
     if request.method == 'POST':
         form = ProveedorForm(request.POST)
-     
+
         if form.is_valid() :
             f=form.save(commit=False)
             f.save()
-         
-        return redirect('Tienda')
+
+        return redirect('listproveedor')
     else:
         form = ProveedorForm()
     context={
@@ -127,15 +127,15 @@ def NuevoProveedor(request):
 def nuevaFactura(request):
     if request.method == 'POST':
         form = FacturaForm(request.POST)
-     
+
         if form.is_valid() :
             f=form.save(commit=False)
             username = None
             if request.user.is_authenticated:
                 username = request.user.username
-                f.autor=  username 
+                f.autor=  username
             f.save()
-         
+
         return redirect('kitchen')
     else:
         form = FacturaForm()
@@ -159,8 +159,8 @@ def NuevoProducto(request):
             a=form.save(commit=False)
             i=0
             c=a.cantidad
-            for i in range(c):                
-                a.codigo= a.marca.nombre[0:3] + str(le+i)
+            for i in range(c):
+                a.codigo= a.nombre[0:3] + str(le+i)
                 a.estado=True
                 a.save()
                 f.related_productos.add(a)
@@ -168,7 +168,7 @@ def NuevoProducto(request):
                 print(a.codigo)
             return HttpResponseRedirect("/facturaactiva/")
         else:
-            print('error')  
+            print('error')
     context={
             "product":p,
             "form":form,
@@ -233,7 +233,7 @@ def ListaProveedor(request):
     #si el campo del objeto contiene el queryset lo filtra. Distinct para que no haya conflicto con dos o mas iguales
     if queryset:
         prov = Proveedor.objects.filter(
-            Q(nombre_p__icontains = queryset)| Q(rut_p__icontains=queryset) 
+            Q(nombre_p__icontains = queryset)| Q(rut_p__icontains=queryset)
         ).distinct()
     context={
         "product":prov,
@@ -278,7 +278,7 @@ def ListaProducto(request):
     #si el campo del objeto contiene el queryset lo filtra. Distinct para que no haya conflicto con dos o mas iguales
     if queryset:
         productos = Producto.objects.filter(
-            Q(nombre__icontains = queryset)| Q(codigo__icontains=queryset) 
+            Q(nombre__icontains = queryset)| Q(codigo__icontains=queryset)
         ).distinct()
     context={
         "product":productos,
@@ -292,7 +292,9 @@ def ListaFacturas(request):
     #si el campo del objeto contiene el queryset lo filtra. Distinct para que no haya conflicto con dos o mas iguales
     if queryset:
         facturas = Factura.objects.filter(
-            Q(nombre_p__icontains = queryset)| Q(codigo__icontains=queryset) 
+             Q(codigo__icontains=queryset)
+            | Q(fecha_compra__icontains=queryset)
+
         ).distinct()
     context={
         "facturas":facturas,
@@ -302,7 +304,7 @@ def ListaFacturas(request):
 @login_required
 def detalleFactura(request,id_f):
     factura=Factura.objects.get(id=id_f)
- 
+
     context={
         "factura":factura,
     }
@@ -310,7 +312,7 @@ def detalleFactura(request,id_f):
 
 @login_required
 def detalleProducto(request,id_p):
-    producto=Producto.objects.get(codigo=id_p)  
+    producto=Producto.objects.get(codigo=id_p)
     context={
         "producto":producto,
     }
@@ -325,7 +327,7 @@ def Update(request,id):
     }
     obj = get_object_or_404(Producto, codigo = id)
 
-    form = ProductoForm(request.POST or None, instance = obj)
+    form = ProductoFormUpdate(request.POST or None, instance = obj)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect("/listaproducto/")
@@ -427,12 +429,12 @@ def login_request(request):
 
 def logout_request(request):
 	logout(request)
-	messages.info(request, "You have successfully logged out.") 
+	messages.info(request, "You have successfully logged out.")
 	return redirect("/")
 
 @login_required
 def generate_qrcode(request,qr):
-    det = 'http://127.0.0.1:8000/detalleproducto/'
+    det = 'https://csirona.pythonanywhere.com/detalleproducto/'
     data = det+qr
     img = qrcode.make(data)
 
@@ -449,10 +451,10 @@ def generate_qrcode(request,qr):
 #     ff=f.related_productos.all()
 #     #create bytestream buffer
 #     buff= io.BytesIO()
-    
+
 #     #create a canvas
 #     c= canvas.Canvas(buff,pagesize=A4,bottomup=0)
-    
+
 #     #create a text object
 #     textob= c.beginText()
 #     textob.setTextOrigin(inch,inch)
@@ -501,7 +503,7 @@ def cambiarEstado(request,prod):
     p.fecha_baja=datetime.now()
     messages.add_message(request, messages.SUCCESS, 'Producto dado de baja')
     p.save()
-  
+
     print(p.estado)
     return redirect("listproduct")
 
@@ -521,11 +523,12 @@ def StockBuscar(request):
     #si el campo del objeto contiene el queryset lo filtra. Distinct para que no haya conflicto con dos o mas iguales
     if queryset:
         p = Producto.objects.filter(
-            Q(nombre__icontains = queryset)
+            Q(nombre__icontains = queryset) |Q(codigo__icontains = queryset)
         ).distinct()
         prod=p.last()
         s=p.count()
-    
+
+
     context={
         "queryset":s,
         "prod":prod,
@@ -542,7 +545,8 @@ def Almacen(request):
     #si el campo del objeto contiene el queryset lo filtra. Distinct para que no haya conflicto con dos o mas iguales
     if queryset:
         productos = Producto.objects.filter(
-            Q(nombre__icontains = queryset)| Q(codigo__icontains=queryset) 
+            Q(nombre__icontains = queryset)| Q(codigo__icontains=queryset)
+            | Q(almacen__icontains=queryset)
         ).distinct()
     context={
         "product":productos,
@@ -557,7 +561,7 @@ def setAlmacen(request,cod):
     form = AlmacenForm(request.POST or None, instance = obj)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect("/almcaen/")
+        return HttpResponseRedirect("/almacen/")
     else:
         print('error')
     context["form"] = form
