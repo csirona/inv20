@@ -17,13 +17,21 @@ class ProductoForm(forms.ModelForm):
 
     class Meta:
         model = Producto
-        fields = ['nombre','serie','categoria','marca','precio','imagen','cantidad']
+        fields = ['categoria','marca','nombre','precio','imagen','cantidad']
         widgets = {
             'nombre': forms.TextInput(attrs={'class':'form-control'}),
-            'serie': forms.TextInput(attrs={'class':'form-control'}),
             'categoria': forms.Select(attrs={'class':'form-select'}),
             'marca': forms.Select(attrs={'class':'form-select'}),
             'precio': forms.NumberInput(attrs={'class':'form-control'}),
+        }
+
+class SerieProductoForm(forms.ModelForm):
+
+    class Meta:
+        model = Producto
+        fields = ['serie']
+        widgets = {
+            'serie': forms.TextInput(attrs={'class':'form-control'}),
         }
 
 class ProductoFormUpdate(forms.ModelForm):
@@ -72,10 +80,11 @@ class MarcaForm(forms.ModelForm):
 class FacturaForm(forms.ModelForm):
     class Meta:
         model = Factura
-        fields = ['codigo','descripcion','fecha_compra','proveedor']
+        fields = ['codigo','descripcion','fecha_compra','proveedor', 'financiado']
         widgets = {
                     'fecha_compra': DateInput(),
                     'descripcion': forms.TextInput(attrs={'class':'form-control'}),
+                    
                 }
         labels = {
             'codigo': 'Nº Factura',

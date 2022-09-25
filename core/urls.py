@@ -54,11 +54,21 @@ urlpatterns = [
     path('almacen/',views.Almacen,name='almacen'),
 
     path('setalmacen/<str:cod>',views.setAlmacen,name='setalmacen'),
+    path('setserie/<str:cod>',views.setSerie,name='setserie'),
 
     path('qrcode/<str:qr>',views.generate_qrcode,name='qrcode'),
     path('cambiarestado/<str:prod>',views.cambiarEstado,name='cambiarEstado'),
+
+    path('eliminarfactura/<str:cod>',views.DeleteFactura,name='deletefactura'),
+    path('eliminar/<str:cod>',views.DeleteConfirmFactura,name='delete'),
+
+
 
     path('buscarstock/',views.StockBuscar,name='buscarstock'),
     # path('generatepdf/',views.generate_pdf,name='generatepdf'),
     # path('htmltopdf/',views.htmlToPdf,name='htmltopdf'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+handler404 = 'core.views.error_404_view'
+

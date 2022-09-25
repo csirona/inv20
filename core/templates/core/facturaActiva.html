@@ -14,59 +14,66 @@
 
 
 <div class="container d-flex flex-row">
-
+{% if factura %}
   <div >
-    {% for place in cmd %}
-    {% if place.estado == True %}
     <div class="card ml-3" style="width: 18rem;">
         <div class="card-body">
-            <h3 class="text-center">{{ place.id }}</h3>
+            <h3 class="text-center">{{ factura.id }}</h3>
 
-                <strong>Id:</strong> {{ place.id }}<br/>
-                <strong>N. Factura: </strong>{{ place.codigo }}<br/>
-                <strong>Fecha Ingreso: </strong>{{ place.fecha_ingreso }}<br/>
-                <strong>Rut Proveedor: </strong>{{ place.proveedor.rut_p }}<br/>
-                <strong>Nombre Proveedor: </strong>{{ place.proveedor.nombre_p }}<br/>
-                <strong>Direccion Proveedor:  </strong>{{ place.proveedor.direccion }}<br/>
-                <strong>Cuidad Proveedor:  </strong>{{ place.proveedor.cuidad }}<br/>
+                <strong>Id:</strong> {{ factura.id }}<br/>
+                <strong>N. Factura: </strong>{{ factura.codigo }}<br/>
+                <strong>Fecha Ingreso: </strong>{{ factura.fecha_ingreso }}<br/>
+                <strong>Rut Proveedor: </strong>{{ factura.proveedor.rut_p }}<br/>
+                <strong>Nombre Proveedor: </strong>{{ factura.proveedor.nombre_p }}<br/>
+                <strong>Direccion Proveedor:  </strong>{{ factura.proveedor.direccion }}<br/>
+                <strong>Cuidad Proveedor:  </strong>{{ factura.proveedor.cuidad }}<br/>
 
-                <strong>Autor:  </strong>{{ place.autor }}<br/>
+                <strong>Autor:  </strong>{{ factura.autor }}<br/>
 
         </div>
 
         <a href="{% url 'newproduct' %}" class="btn btn-success">Agregar otro producto</a>
 
-        <a href="{% url 'ready' place.id%}" class="btn btn-warning">Guardar Factura</a>
+        <a href="{% url 'ready' factura.id%}" class="btn btn-warning">Guardar Factura</a>
     </div>
-    {% endif %}
-    {% endfor %}
   </div>
-
+  {% else %}
+  <h3>No hay Factura Activa</h3>
+  {% endif %}
     <div class='container'>
 
-      <table class="table table-striped table-dark">
+      <table class="table table-responsive table-striped table-dark table-responsive">
           <thead>
             <tr>
-              <th scope="col">Codigo</th>
-              <th scope="col">Lista de Productos</th>
-
+              <th scope="col">ID</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Serie</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Accion</th>
             </tr>
           </thead>
           <tbody>
-            {% for place in cmd %}
-            {% if place.estado == True %}
+
             <div class="card ml-3" style="width: 18rem;">
             <div >
 
 
 
-                    {% for area in place.related_productos.all %}
+                    {% for area in prods %}
 
                       <tr>
                       <th scope="row">{{area.codigo}}</th>
                       <td>{{area.nombre}}</td>
+                      {% if area.serie%}
+                      <td>{{area.serie}}</td>
+                      {% else %}
+                      <td><a href="{% url 'setserie' area.codigo %}" class='btn btn-success'>Ingresar</a></td>
+                      {% endif %}
                       <td>$ {{area.formatNumber}}</td>
-                      <td><a href="{% url 'qrcode' area.codigo %}" class='btn btn-secondary'>Qr</a></td>
+                      <td><a href="{% url 'qrcode' area.codigo %}" class='btn'>Qr</a>
+                      {% if area.serie%}
+                      <a href="{% url 'setserie' area.codigo %}" class='btn'>Modificar serie</a></td>
+                      {% endif %}
 
 
 
@@ -77,8 +84,7 @@
                           </tbody>
                         </table>
                   </div>
-              {% endif %}
-              {% endfor %}
+
 
 
 

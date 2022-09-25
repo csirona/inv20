@@ -1,0 +1,37 @@
+
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div id="page-wrapper">
+    <div id="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="page-head-line">Eliminar Factura</h1>
+  
+            </div>
+        </div>
+        <div class='container '>
+            
+            <div class="main">
+        
+                <h3>¿Estás seguro que deseas ELIMINAR la factura {{factura.id}} ?</h3>
+                <h5>Esto incluye todos sus productos</h5>
+                
+                <a  class='btn btn-danger' href="{% url 'delete' factura.id %}">Eliminar</a>
+                <a href="{% url 'listproduct' %}">Cancel </a>
+                {% for p in prods %}
+                <div class="container">
+                    <ul>
+                        <li>
+                            {{p.nombre}}
+                        </li>
+                    </ul>
+                </div>
+                {% endfor %}
+        </div>
+            
+        </div>
+       
+    </div>               
+</div>
+{% endblock content %}

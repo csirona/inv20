@@ -68,11 +68,12 @@ class Factura(models.Model):
     codigo = models.PositiveIntegerField()
     related_productos = models.ManyToManyField(Producto,blank=True)
     fecha_ingreso = models.DateTimeField(auto_now_add=True)
-    fecha_compra = models.DateTimeField(null=True,blank=True,default=timezone.now)
+    fecha_compra = models.DateField(null=True,blank=True,default=timezone.now)
     neto = models.PositiveIntegerField(null=True,blank=True)
     estado = models.BooleanField(default=True)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     autor = models.CharField(max_length=50,null=True,blank=True)
+    financiado = models.CharField(max_length=50,null=True,blank=True)
 
     def __str__(self):
         return str(self.id)

@@ -4,7 +4,6 @@ from datetime import datetime
 import io
 from django.shortcuts import render, HttpResponse, redirect
 from django.utils import timezone
-# Create your views here.
 from django.core.paginator import Paginator
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -15,7 +14,7 @@ from core.models import Categoria, Factura, Marca, Producto, Proveedor
 import qrcode
 from django.contrib.auth.decorators import login_required
 
-
+from django.template import RequestContext
 
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
@@ -82,7 +81,7 @@ def NuevaMarca(request):
             f=form.save(commit=False)
             f.save()
 
-        return redirect('Tienda')
+        return redirect('/')
     else:
         form = MarcaForm()
     #Contezto de datos
@@ -187,17 +186,20 @@ def Confirm(request):
 
 @login_required
 def Kitchen(request):
+    fact= None
+    prods=None
+    #Filtrar facturas por autor
     cmd = Factura.objects.filter(autor=request.user.username)
-    page = request.GET.get('page', 1)
-    paginator = Paginator(cmd, 6)
-    try:
-        users = paginator.page(page)
-    except PageNotAnInteger:
-        users = paginator.page(1)
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
+    #Recorrer facturas y cuando estado == True, la guarda y a sus productos
+    for f in cmd:
+        if f.estado:
+            #fact es la factura activa
+            fact=f
+            prods = f.related_productos.all()
+
     context={
-        "cmd":users,
+        "factura":fact,
+        "prods":prods
     }
     return render(request, 'core/facturaActiva.html',context)
 
@@ -566,3 +568,54 @@ def setAlmacen(request,cod):
         print('error')
     context["form"] = form
     return render(request, 'core/setalmacen.html',context)
+
+@login_required
+def setSerie(request,cod):
+    context={
+    }
+    obj = get_object_or_404(Producto, codigo = cod)
+    form = SerieProductoForm(request.POST or None, instance = obj)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect("/facturaactiva/")
+    else:
+        print('error')
+    context["form"] = form
+    return render(request, 'core/setSerie.html',context)
+
+
+@login_required
+def DeleteFactura(request,cod):
+    prods=None
+    #Traer la factura por id
+    factura = Factura.objects.get(id=cod)
+    #Recorrer facturas y cuando estado == True, la guarda y a sus productos
+    prods = factura.related_productos.all()
+    print(factura)
+    print(prods)
+    
+    context={
+        "factura":factura,
+        "prods":prods
+    }
+    return render(request, 'core/deleteFactura.html',context)
+
+
+@login_required
+def DeleteConfirmFactura(request,cod):
+    #Traer la factura por id
+    factura = Factura.objects.get(id=cod)
+    #Recorrer facturas y cuando estado == True, la guarda y a sus productos
+    prods = factura.related_productos.all()
+    for p in prods:
+        p.delete()
+    
+    factura.delete()
+
+    return HttpResponseRedirect("/listafactura/")
+
+def error_404_view(request, exception):
+   
+    # we add the path to the the 404.html file
+    # here. The name of our HTML file is 404.html
+    return render(request, '404.html')
