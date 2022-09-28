@@ -1,4 +1,4 @@
-#!/home/man1/Documents/inv20/.venv/bin/python3
+#!/home/inventariocst/inv20/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

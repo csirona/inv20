@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+import xlwt
 from datetime import datetime
 import io
 from django.shortcuts import render, HttpResponse, redirect
@@ -327,14 +327,17 @@ def Update(request,id):
     context={
 
     }
-    obj = get_object_or_404(Producto, codigo = id)
+    obj = Producto.objects.get( codigo = id)
 
-    form = ProductoFormUpdate(request.POST or None, instance = obj)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect("/listaproducto/")
-    else:
-        print('error')
+    form = ProductoFormUpdate(request.POST, instance = obj)
+  #  if form.is_valid():
+   #     img_path = obj.imagen.path
+    #    if os.path.exists(img_path):
+     #       os.remove(img_path)
+      #  form.save()
+       # return HttpResponseRedirect("/listaproducto/")
+  #  else:
+ #       print('error')
     context["form"] = form
 
     return render(request, 'core/update_product.html',context)
@@ -593,7 +596,7 @@ def DeleteFactura(request,cod):
     prods = factura.related_productos.all()
     print(factura)
     print(prods)
-    
+
     context={
         "factura":factura,
         "prods":prods
@@ -609,13 +612,47 @@ def DeleteConfirmFactura(request,cod):
     prods = factura.related_productos.all()
     for p in prods:
         p.delete()
-    
+
     factura.delete()
 
     return HttpResponseRedirect("/listafactura/")
 
+
+#To  excel data
+
+def export_users_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="productos.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Producto')
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Codigo', 'Nombre','Serie', 'Descripcion', 'Categoria','Marca','Precio','Estado','Almacen' ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    rows = Producto.objects.all().values_list('codigo', 'nombre', 'serie', 'descripcion','categoria','marca','precio','estado','almacen')
+    print(rows)
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
+
 def error_404_view(request, exception):
-   
+
     # we add the path to the the 404.html file
     # here. The name of our HTML file is 404.html
     return render(request, '404.html')

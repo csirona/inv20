@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-jef%rdzg^2j@b$wju_#yd_kwolm%5n2t!q)9^l&+2c2g97-)g1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['pythonanywhere.com', '*']
 
 
 # Application definition
@@ -77,10 +77,15 @@ WSGI_APPLICATION = 'inv.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'inventariocst$inv20',
+        'USER': 'inventariocst',
+        'PASSWORD': 'cst2022db',
+        'HOST': 'inventariocst.mysql.pythonanywhere-services.com',
+
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

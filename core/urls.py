@@ -62,6 +62,7 @@ urlpatterns = [
     path('eliminarfactura/<str:cod>',views.DeleteFactura,name='deletefactura'),
     path('eliminar/<str:cod>',views.DeleteConfirmFactura,name='delete'),
 
+    path('export/xls', views.export_users_xls, name='export_users_xls'),
 
 
     path('buscarstock/',views.StockBuscar,name='buscarstock'),
