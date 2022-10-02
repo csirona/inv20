@@ -2,6 +2,7 @@ from django.shortcuts import render
 import xlwt
 from datetime import datetime
 import io
+import os
 from django.shortcuts import render, HttpResponse, redirect
 from django.utils import timezone
 from django.core.paginator import Paginator
@@ -323,21 +324,27 @@ def detalleProducto(request,id_p):
 
 
 @login_required
+@login_required
 def Update(request,id):
     context={
 
     }
     obj = Producto.objects.get( codigo = id)
+    username = request.user.username
 
-    form = ProductoFormUpdate(request.POST, instance = obj)
-  #  if form.is_valid():
-   #     img_path = obj.imagen.path
-    #    if os.path.exists(img_path):
-     #       os.remove(img_path)
-      #  form.save()
-       # return HttpResponseRedirect("/listaproducto/")
-  #  else:
- #       print('error')
+    form = ProductoFormUpdate(request.POST or None,request.FILES or None, instance = obj)
+    if form.is_valid():
+        img_path = obj.imagen.path
+        if os.path.exists(img_path):
+            os.remove(img_path)
+
+        p=form.save()
+        p.last_mod_user = username
+        p.last_mod_time = datetime.now()
+        p.save()
+        return HttpResponseRedirect("/listaproducto/")
+    else:
+        print('error')
     context["form"] = form
 
     return render(request, 'core/update_product.html',context)
@@ -506,11 +513,15 @@ def cambiarEstado(request,prod):
     p=Producto.objects.get(codigo=prod)
     p.estado=False
     p.fecha_baja=datetime.now()
+    username = request.user.username
+    p.last_cs_user = username
+    p.last_cs_time = datetime.now()
     messages.add_message(request, messages.SUCCESS, 'Producto dado de baja')
     p.save()
 
     print(p.estado)
     return redirect("listproduct")
+
 
 @login_required
 def confirmCambioEstado(request,cod):
@@ -633,7 +644,7 @@ def export_users_xls(request):
     font_style = xlwt.XFStyle()
     font_style.font.bold = True
 
-    columns = ['Codigo', 'Nombre','Serie', 'Descripcion', 'Categoria','Marca','Precio','Estado','Almacen' ]
+    columns = ['Codigo', 'Nombre','Serie', 'Observacion', 'Proveedor','Categoria','Marca','Precio','Estado','Almacen','Factura', 'Fecha de Compra' ]
 
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
@@ -641,8 +652,7 @@ def export_users_xls(request):
     # Sheet body, remaining rows
     font_style = xlwt.XFStyle()
 
-    rows = Producto.objects.all().values_list('codigo', 'nombre', 'serie', 'descripcion','categoria','marca','precio','estado','almacen')
-    print(rows)
+    rows = Producto.objects.all().values_list('codigo', 'nombre', 'serie', 'observacion','factura__proveedor__nombre_p','categoria__nombre','marca__nombre','precio','estado','almacen','factura__codigo','factura__fecha_compra')
     for row in rows:
         row_num += 1
         for col_num in range(len(row)):

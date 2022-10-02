@@ -9,7 +9,9 @@
                 <h1 class="page-head-line">Lista Producto</h1>
 
             </div>
-            <a class="btn btn-secondary" href="{% url 'export_users_xls' %}">Export all users</a>
+            <div class=" d-flex p-3" >
+                <a class="btn btn-success" href="{% url 'export_users_xls' %}">Exportar Excel</a>
+            </div>
 
         </div>
         <div class='container '>
@@ -76,13 +78,17 @@
                                   {% endif %}
                                 </td>
                                 <td><a  class='btn btn-success' href="{% url 'detalleproducto' p.codigo %}">Ver</a></td>
-                              <td><a class='btn btn-warning' href="{% url 'updateproduct' p.codigo %}">Modificar</a>
+
+                                <td>                                {%if request.user.is_superuser %}
+                                    <a class='btn btn-warning' href="{% url 'updateproduct' p.codigo %}">Modificar</a>
                                   {% if p.estado %}
 
                                   <a  class='btn btn-danger' href="{% url 'confirmcambioestado' p.codigo%}">Dar de Baja</a></td>
                                   {% else %}
 
                                   {% endif %}
+                                </tr>
+                                {% endif %}
                                 </tr>
                           {% endfor %}
                       </tbody>

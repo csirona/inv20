@@ -16,7 +16,7 @@
                 <h3> Detalle de Producto</h3>
                 <div class="card" style="width: 18rem;">
                   {% if producto.imagen %}
-                    <img class="card-img-top" src="{{producto.imagen}}" alt="Card image cap">
+                    <img class="card-img-top" src="{{producto.imagen.url}}" alt="Card image cap">
                   {% else %}
                     <img class="card-img-top" src="/media/core/images/dflt.jpg" alt="Card image cap">
                   {% endif %}

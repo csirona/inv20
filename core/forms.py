@@ -17,9 +17,10 @@ class ProductoForm(forms.ModelForm):
 
     class Meta:
         model = Producto
-        fields = ['categoria','marca','nombre','precio','imagen','cantidad']
+        fields = ['categoria','marca','nombre','observacion','precio','imagen','cantidad']
         widgets = {
             'nombre': forms.TextInput(attrs={'class':'form-control'}),
+            'observacion': forms.TextInput(attrs={'class':'form-control'}),
             'categoria': forms.Select(attrs={'class':'form-select'}),
             'marca': forms.Select(attrs={'class':'form-select'}),
             'precio': forms.NumberInput(attrs={'class':'form-control'}),
@@ -38,9 +39,10 @@ class ProductoFormUpdate(forms.ModelForm):
 
     class Meta:
         model = Producto
-        fields = ['nombre','serie','categoria','marca','precio','imagen']
+        fields = ['nombre','observacion','serie','categoria','marca','precio','imagen']
         widgets = {
             'nombre': forms.TextInput(attrs={'class':'form-control'}),
+            'observacion': forms.TextInput(attrs={'class':'form-control'}),
             'serie': forms.TextInput(attrs={'class':'form-control'}),
             'categoria': forms.Select(attrs={'class':'form-select'}),
             'marca': forms.Select(attrs={'class':'form-select'}),
@@ -84,7 +86,7 @@ class FacturaForm(forms.ModelForm):
         widgets = {
                     'fecha_compra': DateInput(),
                     'descripcion': forms.TextInput(attrs={'class':'form-control'}),
-                    
+
                 }
         labels = {
             'codigo': 'Nº Factura',

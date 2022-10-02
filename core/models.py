@@ -19,7 +19,7 @@ class Marca(models.Model):
 class Producto(models.Model):
     nombre = models.CharField(max_length=150)
     codigo = models.CharField(max_length=100,primary_key=True)
-    descripcion = models.TextField(default="descripcion")
+    observacion = models.TextField(blank=True,null=True)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE,null=True,blank=True)
     precio = models.PositiveIntegerField(null=True,blank=True)
@@ -28,8 +28,10 @@ class Producto(models.Model):
     fecha_baja = models.DateTimeField(null=True, blank=True)
     almacen = models.CharField(max_length=150,null=True,blank=True)
     serie = models.CharField(max_length=20,null=True,blank=True)
-    #qr
-
+    last_mod_user = models.CharField(max_length=50,null=True,blank=True)
+    last_mod_time = models.DateTimeField(null=True,blank=True)
+    last_cs_user= models.CharField(max_length=50,null=True,blank=True)
+    last_cs_time= models.DateTimeField(null=True,blank=True)
     cantidad = models.PositiveIntegerField(default=1)
 
     def __str__(self):
@@ -65,7 +67,7 @@ class Proveedor(models.Model):
 
 class Factura(models.Model):
     descripcion = models.TextField(max_length=50, null=True)
-    codigo = models.PositiveIntegerField()
+    codigo = models.PositiveIntegerField(unique=True)
     related_productos = models.ManyToManyField(Producto,blank=True)
     fecha_ingreso = models.DateTimeField(auto_now_add=True)
     fecha_compra = models.DateField(null=True,blank=True,default=timezone.now)
