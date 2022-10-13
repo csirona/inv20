@@ -334,9 +334,10 @@ def Update(request,id):
 
     form = ProductoFormUpdate(request.POST or None,request.FILES or None, instance = obj)
     if form.is_valid():
-        img_path = obj.imagen.path
-        if os.path.exists(img_path):
-            os.remove(img_path)
+        if obj.imagen:
+            img_path = obj.imagen.path
+            if os.path.exists(img_path):
+                os.remove(img_path)
 
         p=form.save()
         p.last_mod_user = username
@@ -666,3 +667,63 @@ def error_404_view(request, exception):
     # we add the path to the the 404.html file
     # here. The name of our HTML file is 404.html
     return render(request, '404.html')
+
+def CountStock(request):
+    prod = Producto.objects.all()
+    lis_cod=[]
+    lis_nom=[]
+    lis_mar=[]
+    lis_cat=[]
+    lis_cant=[]
+    lis =[]
+    dic= {}
+    for p in prod:
+        if p.nombre not in dic:
+            dic[p.nombre] = Producto.objects.filter(nombre=p.nombre).count()
+            lis.append([p.codigo,p.nombre,p.marca.nombre,p.categoria.nombre,str(dic[p.nombre])])
+
+
+
+
+    context={
+        "dic":dic,
+        "lis":lis
+
+    }
+    return render(request, 'core/stock.html',context)
+
+def export_stock_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="stock.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Stock')
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Codigo','Nombre','Categoria','Marca','Cantidad' ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+    prod = Producto.objects.all()
+    lis=[]
+    dic= {}
+    for p in prod:
+        if p.nombre not in dic:
+            dic[p.nombre] = Producto.objects.filter(nombre=p.nombre).count()
+            lis.append((p.codigo,p.nombre,p.marca.nombre,p.categoria.nombre,dic[p.nombre]))
+    rows = lis
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response

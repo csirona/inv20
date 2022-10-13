@@ -63,7 +63,9 @@ urlpatterns = [
     path('eliminar/<str:cod>',views.DeleteConfirmFactura,name='delete'),
 
     path('export/xls', views.export_users_xls, name='export_users_xls'),
+    path('exportstock/xls/>', views.export_stock_xls, name='export_stock_xls'),
 
+    path('stock/',views.CountStock,name='stock'),
 
     path('buscarstock/',views.StockBuscar,name='buscarstock'),
     # path('generatepdf/',views.generate_pdf,name='generatepdf'),
